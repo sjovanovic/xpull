@@ -1,0 +1,82 @@
+/*
+ Xpull - pull to refresh jQuery plugin for iOS and Android
+ by Slobodan Jovanovic
+ Initially made for Spreya app spreya.com
+*/
+.pull-indicator{
+    width:25px;
+    height:41px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom:0px;
+    margin-top:0px;
+    
+    -webkit-transform: translate3d(0px,0px,0px) rotate(0deg);
+    
+    position:relative;
+    top:-41px;
+    -webkit-transition: -webkit-transform 300ms ease;
+
+}
+.triangle-down { 
+    width: 0; height: 0; 
+    border-left: 5px solid transparent; 
+    border-right: 5px solid transparent; 
+    border-top: 6px solid #CACACA; 
+    margin-left:auto;
+    margin-right:auto;
+}
+.arrow-body{
+    width:4px;
+    height:10px;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:#CACACA;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.arrow-rotate-180{
+    -webkit-transform: rotate(-180deg);
+    -webkit-transition: -webkit-transform 300ms ease;
+}
+.pull-spinner {
+    display:none;
+    height:25px;
+    width:25px;
+    margin:0px auto;
+    position:relative;
+    left:-4px;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border-left:4px solid rgba(202,202,202,.15);
+    border-right:4px solid rgba(202,202,202,.15);
+    border-bottom:4px solid rgba(202,202,202,.15);
+    border-top:4px solid rgba(202,202,202,.9);
+    border-radius:100%;
+}
+
+@-webkit-keyframes rotation {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(359deg);}
+}
+
+@-moz-keyframes rotation {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(359deg);}
+}
+
+@-o-keyframes rotation {
+    from {-o-transform: rotate(0deg);}
+    to {-o-transform: rotate(359deg);}
+}
+
+@keyframes rotation {
+    from {transform: rotate(0deg);}
+    to {transform: rotate(359deg);}
+}
