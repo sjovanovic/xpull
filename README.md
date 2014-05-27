@@ -5,6 +5,10 @@ Pull to refresh jQuery plugin for iOS and Android
 
 >This plugin was initially made for [Spreya app](http://spreya.com/ "Spreya")
 
+### Demo:
+
+Open [xpull.divshot.io](http://xpull.divshot.io) on your iOS or Android device
+
 ### Usage:
 
 Include xpul.css and xpull.js then:
