@@ -7,7 +7,7 @@ Pull to refresh jQuery plugin for iOS and Android
 
 ### Demo:
 
-Open [xpull.divshot.io](http://xpull.divshot.io) on your iOS or Android device
+Open [sjovanovic.github.io/xpull/demo.html](http://sjovanovic.github.io/xpull/demo.html) on your iOS or Android device
 
 ### Usage:
 
