@@ -11,7 +11,7 @@ Open [sjovanovic.github.io/xpull/demo.html](http://sjovanovic.github.io/xpull/de
 
 ### Usage:
 
-Include xpul.css and xpull.js then:
+Include xpull.css and xpull.js then:
 
  ```
  $('selector').xpull(options);
@@ -31,8 +31,8 @@ Include xpul.css and xpull.js then:
 
 ``` 
 { 
-     'pullThreshold':50, // Pull threshold - amount in  pixels after which the callback is activated
-    'callback':function(){}, // triggers after user pulls the content over pull threshold
+     'pullThreshold':50, // Pull threshold - amount in  pixels required to pull to enable release callback
+    'callback':function(){}, // triggers after user pulls the content over pull threshold and releases
     'spinnerTimeout':2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
 }  
 ``` 
