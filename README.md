@@ -3,7 +3,7 @@ xpull
 
 Pull to refresh jQuery plugin for iOS and Android
 
-This is one of the pull to refresh plugins for the web. What distinguishes it from the others is that it is lightweight, extremely easy to use and optimized for both Android (mobile Chrome browser) and iOS (mobile safari).
+This is one of the pull to refresh plugins for the web. What distinguishes it from the others is that it is lightweight, extremely easy to use and optimized for Android (mobile Chrome browser) and iOS (mobile safari). It also emulates elastic scroll on both platforms.
 All animations and graphics are pure CSS3. Angular friendly.
 
 >This plugin was initially made for [Spreya app](http://spreya.com/ "Spreya")
