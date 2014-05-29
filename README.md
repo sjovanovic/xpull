@@ -3,6 +3,9 @@ xpull
 
 Pull to refresh jQuery plugin for iOS and Android
 
+This is one of the pull to refresh plugins for the web. What distinguishes it from the others is that it is lightweight, extremely easy to use and optimized for both Android (mobile Chrome browser) and iOS (mobile safari).
+All animations and graphics are pure CSS3. Angular friendly.
+
 >This plugin was initially made for [Spreya app](http://spreya.com/ "Spreya")
 
 ### Demo:
@@ -31,7 +34,7 @@ Include xpull.css and xpull.js then:
 
 ``` 
 { 
-     'pullThreshold':50, // Pull threshold - amount in  pixels required to pull to enable release callback
+    'pullThreshold':50, // Pull threshold - amount in  pixels required to pull to enable release callback
     'callback':function(){}, // triggers after user pulls the content over pull threshold and releases
     'spinnerTimeout':2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
 }  
@@ -46,3 +49,29 @@ Include xpull.css and xpull.js then:
 ### Methods:
 
  * `reset()` - cancels he spinning and resets the plugin to initial state. Example: `$('#container').data('plugin_xpull').reset();`
+ 
+ 
+### Angular
+
+Xpull is also easy to use in Angular. Just use this example:
+
+```
+/*
+  Xpull - pull to refresh jQuery plugin as Angular directive
+*/
+angular.module("xpull").directive("ngXpull", function() {
+  return function(scope, elm, attr) {
+    return $(elm[0]).xpull({
+      'callback': function() {
+        return scope.$apply(attr.ngXpull);
+      }
+    });
+  };
+});
+```
+Then in view add as attribute on your scrollable container:
+
+```
+ <div ng-xpull="reload()"></div>
+
+```
