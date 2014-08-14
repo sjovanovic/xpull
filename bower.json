@@ -1,0 +1,31 @@
+{
+  "name": "xpull",
+  "main": "xpull.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/sjovanovic/xpull",
+  "authors": [
+    "sjovanovic <sjovanovic@gmail.com>"
+  ],
+  "description": "Pull to refresh jQuery plugin for iOS and Android browsers and web views",
+  "keywords": [
+    "pull",
+    "to",
+    "refresh",
+    "android",
+    "ios",
+    "angular",
+    "release",
+    "reload",
+    "jquery",
+    "plugin",
+    "directive"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
