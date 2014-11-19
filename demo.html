@@ -13,7 +13,11 @@
     <script>
       // Demo		
       $(function(){
-        $('#container').xpull();		
+        $('#container').xpull({
+          'callback':function(){
+            console.log('Released...');
+          }
+        });		
       });
     </script>
     <style type="text/css">

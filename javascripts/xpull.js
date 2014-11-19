@@ -78,7 +78,6 @@
             });
             elm.unbind('touchmove.'+pluginName);
         	elm.on('touchmove.'+pluginName, function(ev){
-                console.log('Ovde?--');
         		if(elm.position().top < 0){
         			return true;
         		}
