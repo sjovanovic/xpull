@@ -12,6 +12,17 @@ All animations and graphics are pure CSS3. Angular friendly.
 
 Open [sjovanovic.github.io/xpull/demo.html](http://sjovanovic.github.io/xpull/demo.html) on your iOS or Android device
 
+### Install
+
+Just include xpull.js and xpull.css in your page. 
+
+Or install via Bower:
+
+```
+bower install xpull
+```
+
+
 ### Usage:
 
 Include xpull.css and xpull.js then:
