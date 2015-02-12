@@ -65,7 +65,7 @@
     			'-webkit-transform':"translate3d(0px, -"+inst.indicatorHeight+"px, 0px)"
     		});
             elm.parent().css({
-            	'-webkit-overflow-scrolling': 'touch',
+            	'-webkit-overflow-scrolling': 'touch'
     		});
             var ofstop = elm.parent().offset().top;
       		var fingerOffset = 0;
