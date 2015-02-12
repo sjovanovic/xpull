@@ -81,7 +81,7 @@
             });
             elm.unbind('touchmove.'+pluginName);
         	elm.on('touchmove.'+pluginName, function(ev){
-        		if(elm.position().top < 0 || elm.parent().scrollTop() > 0){ // trigger callback only if pulled from the top of the list
+        		if(elm.position().top < 0 || elm.parent().scrollTop() > 0 || document.body.scrollTop > 0){ // trigger callback only if pulled from the top of the list
         			return true;
         		}
                 if(inst.indicatorHidden){
