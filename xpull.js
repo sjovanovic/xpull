@@ -37,7 +37,10 @@
     var pluginName = "xpull",
         defaults = {
             pullThreshold:50,
+            maxPullThreshold:50,
             spinnerTimeout:2000,
+			onPullStart:function(){},
+			onPullEnd:function(){},
             callback:function(){}
         };
     function Plugin( element, options ) {
@@ -63,7 +66,6 @@
     		});
             elm.parent().css({
             	'-webkit-overflow-scrolling': 'touch',
-    			'overflow-y':'auto'
     		});
             var ofstop = elm.parent().offset().top;
       		var fingerOffset = 0;
@@ -74,6 +76,7 @@
             inst.indicatorHidden = true;
       		elm.unbind('touchstart.'+pluginName);
             elm.on('touchstart.'+pluginName, function(ev){
+				inst.options.onPullStart.call(this);
             	fingerOffset = ev.originalEvent.touches[0].pageY - ofstop
             });
             elm.unbind('touchmove.'+pluginName);
@@ -94,12 +97,18 @@
 						});
 						inst.elast = false;
         			}
-	        		$(elm).css({
-	        			'-webkit-transform': "translate3d(0px, " + (top - inst.indicatorHeight) + "px, 0px)"
-	        		});
-					inst.indicator.css({
-		        		'top': (top - inst.indicatorHeight) + "px"
-		        	});
+
+					if(top <= (parseInt(inst.options.pullThreshold) + inst.options.maxPullThreshold )){
+
+						$(elm).css({
+							'-webkit-transform': "translate3d(0px, " + (top - inst.indicatorHeight) + "px, 0px)"
+						});
+
+						inst.indicator.css({
+							'top': (top - inst.indicatorHeight) + "px"
+						});
+					}
+
 	        		if(top > inst.options.pullThreshold && !hasc){
 		        		inst.indicator.addClass('arrow-rotate-180');
 		        	}else if(top <= inst.options.pullThreshold && hasc){
@@ -114,6 +123,7 @@
         	});
 			elm.unbind('touchend.'+pluginName);
         	elm.on('touchend.'+pluginName, function(ev){
+				inst.options.onPullEnd.call(this);
         		if(top > 0){
 	        		if(top > inst.options.pullThreshold){
 	        			inst.options.callback.call(this);
