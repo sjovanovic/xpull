@@ -43,13 +43,14 @@ Include xpull.css and xpull.js then:
 
 ### Options:
 
-``` 
-{ 
+```
+{
     'pullThreshold':50, // Pull threshold - amount in  pixels required to pull to enable release callback
     'callback':function(){}, // triggers after user pulls the content over pull threshold and releases
     'spinnerTimeout':2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
-}  
-``` 
+    'loadingHtml': '<div class="pull-indicator my-custom-pull-indicator"><div class="arrow-body my-custom-arrow-class"></div><div class="triangle-down"></div><div class="pull-spinner">Hold tight, reloading!</div></div>' // optional - customize the default loading markup (certain classes need to be present for it to function though: .pull-indicator, .arrow-body, .triangle-down, .pull-spinner)
+}
+```
 
  To get the instance of Xpull:
 
