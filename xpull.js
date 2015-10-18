@@ -36,6 +36,7 @@
 (function($, window, document, undefined) {
     var pluginName = "xpull",
         defaults = {
+            paused: false,
             pullThreshold: 50,
             maxPullThreshold: 50,
             spinnerTimeout: 2000,
@@ -78,11 +79,17 @@
             inst.indicatorHidden = true;
             elm.unbind('touchstart.' + pluginName);
             elm.on('touchstart.' + pluginName, function(ev) {
+                if(inst.options.paused)
+                  return false;
+
                 inst.options.onPullStart.call(this);
                 fingerOffset = ev.originalEvent.touches[0].pageY - ofstop
             });
             elm.unbind('touchmove.' + pluginName);
             elm.on('touchmove.' + pluginName, function(ev) {
+                if(inst.options.paused)
+                  return false;
+
                 if (elm.position().top < 0 || (inst.options.scrollingDom || elm.parent()).scrollTop() > 0 || document.body.scrollTop > 0) { // trigger callback only if pulled from the top of the list
                     return true;
                 }
@@ -125,6 +132,9 @@
             });
             elm.unbind('touchend.' + pluginName);
             elm.on('touchend.' + pluginName, function(ev) {
+                if(inst.options.paused)
+                  return false;
+
                 inst.options.onPullEnd.call(this);
                 if (top > 0) {
                     if (top > inst.options.pullThreshold) {
@@ -174,6 +184,12 @@
                 }, 300);
             });
         },
+        pause: function() {
+            this.pause = true;
+        },
+        resume: function() {
+            this.pause = false;
+        },
         reset: function() {
             var inst = this;
             var elm = inst.elm;
@@ -198,6 +214,23 @@
                 $(document.body).unbind('touchmove.' + pluginName);
                 inst.elast = true;
             }, 300);
+        },
+        destroy: function() {
+          var inst = this;
+          var elm = inst.elm;
+
+          elm.parent().find('.pull-indicator').remove();
+
+          $(elm).css({
+              '-webkit-transform': 'inherit'
+          });
+          elm.parent().css({
+              '-webkit-overflow-scrolling': 'inherit'
+          });
+
+          elm.unbind('touchstart.' + pluginName);
+          elm.unbind('touchmove.' + pluginName);
+          elm.unbind('touchend.' + pluginName);
         },
         insertCss: function(css, id) {
             var el = document.getElementById(id);
