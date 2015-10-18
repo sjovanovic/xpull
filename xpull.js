@@ -184,12 +184,6 @@
                 }, 300);
             });
         },
-        pause: function() {
-            this.pause = true;
-        },
-        resume: function() {
-            this.pause = false;
-        },
         reset: function() {
             var inst = this;
             var elm = inst.elm;
@@ -214,23 +208,6 @@
                 $(document.body).unbind('touchmove.' + pluginName);
                 inst.elast = true;
             }, 300);
-        },
-        destroy: function() {
-          var inst = this;
-          var elm = inst.elm;
-
-          elm.parent().find('.pull-indicator').remove();
-
-          $(elm).css({
-              '-webkit-transform': 'inherit'
-          });
-          elm.parent().css({
-              '-webkit-overflow-scrolling': 'inherit'
-          });
-
-          elm.unbind('touchstart.' + pluginName);
-          elm.unbind('touchmove.' + pluginName);
-          elm.unbind('touchend.' + pluginName);
         },
         insertCss: function(css, id) {
             var el = document.getElementById(id);
