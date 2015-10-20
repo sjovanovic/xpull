@@ -45,6 +45,7 @@ Include xpull.css and xpull.js then:
 
 ``` 
 { 
+    'paused': false,  // Is the pulling paused ?
     'pullThreshold':50, // Pull threshold - amount in  pixels required to pull to enable release callback
     'callback':function(){}, // triggers after user pulls the content over pull threshold and releases
     'spinnerTimeout':2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
@@ -61,7 +62,11 @@ Include xpull.css and xpull.js then:
 
  * `reset()` - cancels he spinning and resets the plugin to initial state. Example: `$('#container').data('plugin_xpull').reset();`
  
- 
+### Pausing:
+
+* You can simply pause the handling of pull event, by simply setting the value of *paused* property, e.g.:
+`$('#container').data('plugin_xpull').options.paused = true; // or: false`
+
 ### Angular
 
 Xpull is also easy to use in Angular. Just use this example:
