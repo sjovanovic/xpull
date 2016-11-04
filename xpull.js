@@ -1,7 +1,6 @@
 /*
- Xpull - pull to refresh jQuery plugin for iOS and Android
+ Xpull - pull to refresh jQuery plugin for touch devices
  by Slobodan Jovanovic
- Initially made for Spreya app spreya.com
 
  Usage:
 
@@ -17,24 +16,29 @@
 
  Options:
 
- {
-    'pullThreshold':50, // Pull threshold - amount in pixels after which the callback is activated
-    'callback':function(){}, // triggers after user pulls the content over pull threshold
-    'spinnerTimeout':2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
- }
+{
+    paused: false,  // Is the pulling paused ?
+    pullThreshold: 50, // Pull threshold - amount in  pixels required to pull to enable release callback
+    maxPullThreshold: 50, // Max pull down element - amount in pixels
+    spinnerTimeout: 2000 // timeout in miliseconds after which the loading indicator stops spinning. If set to 0 - the loading will be indefinite
+    onPullStart: function(){}, // triggers after user start pulls the content
+    onPullEnd: function(){}, // triggers after user end pulls the content
+    callback: function(){}, // triggers after user pulls the content over pull threshold and releases
+}
 
- To get the instance of Xpull:
+ To get the thatance of Xpull:
 
  var xpull = $('selector').data("plugin_xpull");
 
   Methods:
 
   reset() - cancels he spinning and resets the plugin to initial state. Example: $('#container').data('plugin_xpull').reset();
+  destroy() - destroy plugin and go to initial state. Example: $('#container').data('plugin_xpull').destroy();
 
 */
 ;
-(function($, window, document, undefined) {
-    var pluginName = "xpull",
+(function($, window, document) {
+    var pluginName = 'xpull',
         defaults = {
             paused: false,
             pullThreshold: 50,
@@ -46,7 +50,7 @@
             callback: function() {}
         };
 
-    function Plugin(element, options) {
+    function Plugin (element, options) {
         this.element = element;
         this.options = $.extend({}, defaults, options);
         this._defaults = defaults;
@@ -55,182 +59,184 @@
     }
     Plugin.prototype = {
         init: function() {
-            var inst = this;
-            var elm = $(inst.element).children();
-            inst.elm = elm;
-            elm.parent().find('.pull-indicator').remove();
-            elm.parent().prepend('<div class="pull-indicator"><div class="arrow-body"></div><div class="triangle-down"></div><div class="pull-spinner"></div></div>');
-            inst.indicator = elm.parent().find('.pull-indicator:eq(0)');
-            inst.spinner = elm.parent().find('.pull-spinner:eq(0)');
-            inst.arrow = elm.parent().find('.arrow-body:eq(0),.triangle-down:eq(0)');
-            inst.indicatorHeight = inst.indicator.outerHeight();
-            $(elm).css({
-                '-webkit-transform': "translate3d(0px, -" + inst.indicatorHeight + "px, 0px)"
-            });
-            elm.parent().css({
-                '-webkit-overflow-scrolling': 'touch'
-            });
-            var ofstop = elm.parent().offset().top;
-            var fingerOffset = 0;
-            var top = 0;
-            var hasc = false;
-            inst.elast = true;
-            inst.arrow.css('visibility', 'hidden');
-            inst.indicatorHidden = true;
-            elm.unbind('touchstart.' + pluginName);
-            elm.on('touchstart.' + pluginName, function(ev) {
-                if(inst.options.paused)
-                  return false;
+            var ofstop = 0,
+                that = this,
+                fingerOffset = 0,
+                top = 0,
+                hasc = false,
+                elm = {};
 
-                inst.options.onPullStart.call(this);
-                fingerOffset = ev.originalEvent.touches[0].pageY - ofstop
+            that.$element = $(that.element);
+            that.elm = elm = that.$element.children(':not(.xpull)');
+            that.indicator = that.$element.find('.xpull:eq(0)');
+            that.indicator.css({display: 'block'});
+            that.spinner = that.indicator.find('.xpull__spinner:eq(0)');
+            that.startBlock = that.indicator.find('.xpull__start-msg:eq(0)');
+            that.indicatorHeight = that.indicator.outerHeight();
+
+            that._changeStyle(-that.indicatorHeight, true);
+            that.$element.css({
+                '-webkit-overflow-scrolling': 'touch',
+                'overflow-scrolling': 'touch'
+            });
+
+            ofstop = that.$element.offset().top;
+
+            that.elast = true;
+            that.startBlock.css('visibility', 'hidden');
+            that.indicatorHidden = true;
+            elm.unbind('touchstart.' + pluginName);
+            elm.on('touchstart.' + pluginName, function (ev) {
+                if (that.options.paused) {
+                    return false;
+                }
+
+                that.options.onPullStart.call(this);
+                fingerOffset = ev.originalEvent.touches[0].pageY - ofstop;
             });
             elm.unbind('touchmove.' + pluginName);
             elm.on('touchmove.' + pluginName, function(ev) {
-                if(inst.options.paused)
-                  return false;
 
-                if (elm.position().top < 0 || (inst.options.scrollingDom || elm.parent()).scrollTop() > 0 || document.body.scrollTop > 0) { // trigger callback only if pulled from the top of the list
+                if (that.options.paused) {
+                    return false;
+                }
+
+                if (elm.position().top < 0 || (that.options.scrollingDom || that.$element).scrollTop() > 0 || document.body.scrollTop > 0) { // trigger callback only if pulled from the top of the list
                     return true;
                 }
-                if (inst.indicatorHidden) {
-                    inst.arrow.css('visibility', 'visible');
-                    inst.indicatorHidden = false;
+
+                if (that.indicatorHidden) {
+                    that.startBlock.css('visibility', 'visible');
+                    that.indicatorHidden = false;
                 }
                 top = (ev.originalEvent.touches[0].pageY - ofstop - fingerOffset);
+
                 if (top > 1) {
 
-                    if (inst.elast) {
+                    if (that.elast) {
                         $(document.body).on('touchmove.' + pluginName, function(e) {
                             e.preventDefault();
                         });
-                        inst.elast = false;
+                        that.elast = false;
                     }
 
-                    if (top <= (parseInt(inst.options.pullThreshold) + inst.options.maxPullThreshold)) {
-
-                        $(elm).css({
-                            '-webkit-transform': "translate3d(0px, " + (top - inst.indicatorHeight) + "px, 0px)"
-                        });
-
-                        inst.indicator.css({
-                            'top': (top - inst.indicatorHeight) + "px"
-                        });
+                    if (top <= (parseInt(that.options.pullThreshold) + that.options.maxPullThreshold)) {
+                        that._changeStyle((top - that.indicatorHeight), false);
                     }
 
-                    if (top > inst.options.pullThreshold && !hasc) {
-                        inst.indicator.addClass('arrow-rotate-180');
-                    } else if (top <= inst.options.pullThreshold && hasc) {
-                        inst.indicator.removeClass('arrow-rotate-180');
+                    if (top > that.options.pullThreshold && !hasc) {
+                        that.indicator.addClass('xpull_pulled');
+                    } else if (top <= that.options.pullThreshold && hasc) {
+                        that.indicator.removeClass('xpull_pulled');
                     }
+
                 } else {
                     $(document.body).unbind('touchmove.' + pluginName);
-                    inst.elast = true;
+                    that.elast = true;
                 }
-                hasc = inst.indicator.hasClass('arrow-rotate-180');
+                hasc = that.indicator.hasClass('xpull_pulled');
 
             });
             elm.unbind('touchend.' + pluginName);
-            elm.on('touchend.' + pluginName, function(ev) {
-                if(inst.options.paused)
-                  return false;
+            elm.on('touchend.' + pluginName, function () {
 
-                inst.options.onPullEnd.call(this);
+                if (that.options.paused) {
+                    return false;
+                }
+
+                that.options.onPullEnd.call(this);
                 if (top > 0) {
-                    if (top > inst.options.pullThreshold) {
-                        inst.options.callback.call(this);
-                        inst.arrow.hide();
-                        inst.spinner.show();
-                        elm.css({
-                            '-webkit-transform': 'translate3d(0px, 0px, 0px)',
-                            '-webkit-transition': '-webkit-transform 300ms ease'
-                        });
-                        inst.indicator.css({
-                            'top': "0px",
-                            '-webkit-transition': 'top 300ms ease'
-                        });
-                        if (inst.options.spinnerTimeout) {
-                            setTimeout(function() {
-                                inst.reset();
-                            }, inst.options.spinnerTimeout);
+                    if (top > that.options.pullThreshold) {
+                        that.options.callback.call(this);
+                        that.startBlock.hide();
+                        that.spinner.show();
+                        that.options.paused = true;
+
+                        that._changeStyle(0, true);
+
+                        if (that.options.spinnerTimeout) {
+                            setTimeout(function () {
+                                that.reset();
+                            }, that.options.spinnerTimeout);
                         }
 
                     } else {
-                        inst.indicator.css({
-                            'top': "-" + inst.indicatorHeight + "px",
-                            '-webkit-transition': 'top 300ms ease'
-                        });
-                        elm.css({
-                            '-webkit-transform': 'translate3d(0px, -' + inst.indicatorHeight + 'px, 0px)',
-                            '-webkit-transition': '-webkit-transform 300ms ease'
-                        });
+                        that._changeStyle(-that.indicatorHeight, true);
                     }
                     top = 0;
                 }
-                if (!inst.indicatorHidden) {
-                    inst.arrow.css('visibility', 'hidden');
-                    inst.indicatorHidden = true;
+                if (!that.indicatorHidden) {
+                    that.startBlock.css('visibility', 'hidden');
+                    that.indicatorHidden = true;
                 }
                 setTimeout(function() {
-                    //inst.indicator.removeClass('arrow-rotate-180');
                     elm.css({
-                        '-webkit-transition': ''
+                        'transition': ''
                     });
-                    inst.indicator.css({
-                        '-webkit-transition': ''
+                    that.indicator.css({
+                        'transition': ''
                     });
                     $(document.body).unbind('touchmove.' + pluginName);
-                    inst.elast = true;
+                    that.elast = true;
                 }, 300);
             });
         },
+
+        // manipulate styles for elements
+        _changeStyle: function (top, transition) {
+            var changeCss = {
+                transform: 'translate3d(0px, ' + top + 'px, 0px)',
+                transition: 'transform 300ms ease'
+            };
+
+            if (!transition) {
+                changeCss.transition = '';
+            }
+
+            this.indicator.css(changeCss);
+            this.elm.css(changeCss);
+        },
+
+        // reset
         reset: function() {
-            var inst = this;
-            var elm = inst.elm;
-            inst.indicator.css({
-                'top': "-" + inst.indicatorHeight + "px",
-                '-webkit-transition': 'top 300ms ease'
-            });
-            elm.css({
-                '-webkit-transform': 'translate3d(0px, -' + inst.indicatorHeight + 'px, 0px)',
-                '-webkit-transition': '-webkit-transform 300ms ease'
-            });
+            var that = this;
+
+            that._changeStyle(-that.indicatorHeight, true);
+
             setTimeout(function() {
-                inst.arrow.show();
-                inst.spinner.hide();
-                inst.indicator.removeClass('arrow-rotate-180');
-                elm.css({
-                    '-webkit-transition': ''
-                });
-                inst.indicator.css({
-                    '-webkit-transition': ''
-                });
+                that.startBlock.show();
+                that.spinner.hide();
+                that.options.paused = false;
+                that.indicator.removeClass('xpull_pulled');
+
+                that._changeStyle(-that.indicatorHeight, false);
                 $(document.body).unbind('touchmove.' + pluginName);
-                inst.elast = true;
+                that.elast = true;
             }, 300);
         },
-        insertCss: function(css, id) {
-            var el = document.getElementById(id);
-            if (el) {
-                el.parentNode.removeChild(el);
-            }
-            var csse = document.createElement('style');
-            csse.type = 'text/css';
-            csse.id = id;
-            if (csse.styleSheet) {
-                document.getElementsByTagName("head")[0].appendChild(csse);
-                csse.styleSheet.cssText = css;
-            } else {
-                var rules = document.createTextNode(css);
-                csse.appendChild(rules);
-                document.getElementsByTagName("head")[0].appendChild(csse);
-            }
+
+        // destroy
+        destroy: function () {
+            var that = this,
+                elm = that.elm;
+
+            // remove styles
+            that._changeStyle(0);
+            that.indicator.css({display: 'none'});
+
+            // off listener
+            elm.off('touchstart.' + pluginName);
+            elm.off('touchmove.' + pluginName);
+            elm.off('touchend.' + pluginName);
+            $(document.body).off('touchmove.' + pluginName);
+
+            that.$element.removeData('plugin_' + pluginName);
         }
     };
     $.fn[pluginName] = function(options) {
         return this.each(function() {
-            if (!$.data(this, "plugin_" + pluginName)) {
-                $.data(this, "plugin_" + pluginName, new Plugin(this, options));
+            if (!$.data(this, 'plugin_' + pluginName)) {
+                $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
             }
         });
     };

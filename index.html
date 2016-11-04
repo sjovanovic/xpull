@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+    <title>Xpull demo</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-2.1.3.min.js" type="text/javascript"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js" type="text/javascript"></script>
+
+    <!-- Add xpull plugin files-->
+    <link rel="stylesheet" href="xpull.css">
+    <script src="xpull.js"></script>
+
+    <script>
+
+        // jquery document ready
+        $(function () {
+
+            // Init xpull plugin for demo
+            $('#demo').xpull({
+                'callback': function () {
+                    console.log('Released...');
+                }
+            });
+
+        });
+    </script>
+
+    <style type="text/css">
+        body {
+            padding-top: 20px;
+        }
+
+        #demo {
+            width: 100%;
+            height: 200px;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            border: 1px solid #ccc;
+        }
+
+        /* Main marketing message */
+        .jumbotron {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1><a href="https://github.com/sjovanovic/xpull">Xpull</a> demo</h1>
+        <p>pull to refresh jQuery plugin for touch devices</p>
+    </div>
+    <p class="lead">Pull the below list to refresh.</p>
+    <div id="demo">
+
+        <!-- Markup for xpull plugin -->
+        <div class="xpull">
+            <div class="xpull__start-msg">
+                <div class="xpull__start-msg-text">Pull Down &amp; Release to Refresh</div>
+                <div class="xpull__arrow"></div>
+            </div>
+            <div class="xpull__spinner">
+                <div class="xpull__spinner-circle"></div>
+            </div>
+        </div>
+        <!-- End Markup for xpull plugin -->
+
+        <ul>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+            <li>Item</li>
+        </ul>
+    </div>
+
+</div>
+</body>
+
+</html>
