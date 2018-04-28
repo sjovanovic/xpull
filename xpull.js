@@ -47,6 +47,8 @@
             scrollingDom: null, // if null, specified element
             onPullStart: function() {},
             onPullEnd: function() {},
+            onPullThreshold: function() {},
+            onPullThresholdReverse: function() {},
             callback: function() {}
         };
 
@@ -126,8 +128,10 @@
 
                     if (top > that.options.pullThreshold && !hasc) {
                         that.indicator.addClass('xpull_pulled');
+                        that.options.onPullThreshold.call(this);
                     } else if (top <= that.options.pullThreshold && hasc) {
                         that.indicator.removeClass('xpull_pulled');
+                        that.options.onPullThresholdReverse.call(this);                        
                     }
 
                 } else {
